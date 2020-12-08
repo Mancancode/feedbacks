@@ -1,7 +1,12 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from 'next/head';
+import styles from '../styles/Home.module.css';
+import { auth } from '../lib/firebase';
+import { useAuth } from '../lib/auth';
 
-export default function Home() {
+const Home = () => {
+
+  const auth = useAuth();
+
   return (
     <div className={styles.container}>
       <Head>
@@ -14,10 +19,14 @@ export default function Home() {
           Welcome to  <a href="https://nextjs.org">  React 2025 🤳</a>
         </h1>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
+        <p className="description">
+          Current user: <code>{auth?.user ? auth.user.email : 'None'}</code>
         </p>
+        {auth?.user ? (
+          <button onClick={(e) => auth.signout()}>Sign Out</button>
+        ) : (
+            <button onClick={(e) => auth.signinWithGithub()}>Sign In</button>
+          )}
 
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
@@ -60,6 +69,9 @@ export default function Home() {
           <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
         </a>
       </footer>
+
     </div>
-  )
-}
+  );
+};
+
+export default Home;
